@@ -1,0 +1,20 @@
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+allow-hotplug {{publica}}
+iface {{publica}} inet dhcp
+	post-up iptables -t nat -A POSTROUTING -o {{publica}} -j MASQUERADE
+
+#{{privada1}}
+auto {{privada1}}
+iface ens4 inet static
+	address {{interna_1}}
+    broadcast {{broadcast1}}
+
+#{{privada2}}
+auto {{privada2}}
+iface {{privada2}} inet static
+	address {{interna_2}}
+    broadcast{{broadcast2}}

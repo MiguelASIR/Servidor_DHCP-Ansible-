@@ -1,0 +1,40 @@
+- name: "Instalacion de isc-dhcp-server"
+  apt:
+    pkg:
+      - isc-dhcp-server
+      - iptables
+- name: "Configurar Network Interfaces"
+  template:
+    src: network_interfaces
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reiniciar servidor
+
+- name: "Bit de forward"
+  sysctl:
+    name: net.ipv4.ip_forward
+    value: "1"
+    sysctl_set: yes
+    
+- name: "Configurar dhcpd.conf"
+  template:
+    src: dhcpd.conf
+    dest: /etc/dhcp/dhcpd.conf
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reiniciar dhcp
+
+- name: "Configurar fichero isc-dhcp-server"
+  template:
+    src: isc-dhcp-server
+    dest: /etc/default/isc-dhcp-server
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - reiniciar dhcp
